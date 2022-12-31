@@ -5,9 +5,9 @@ edition = "2021"
 
 
 [dependencies]
-termion = "1.5"
-crossterm = "0.25"
 ssdp-client = "*"
 tokio = { version = "1", features = ["full"] }
 futures = "0.3.4"
-tui = { version = "0.19", default-features = false, features = ['termion'] }
+colour = "0.6.0"
+prettytable-rs = "^0.8"
+chrono = "0.4"
