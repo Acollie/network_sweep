@@ -1,11 +1,12 @@
 use prettytable::{Attr, color,Table, Row, Cell};
 
+
 // Adding data to the able inplace
 pub fn adding_row(table:& mut Table,usn:&str, address: &str, server: &str){
 
     table.add_row(Row::new(vec![
         Cell::new(&usn),
-        Cell::new(&address)cha,
+        Cell::new(&address),
         Cell::new(&server),
     ]));
 }
