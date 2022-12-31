@@ -25,7 +25,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         let server = String::from(response.as_ref().unwrap().server());
         let location = String::from(response.as_ref().unwrap().location());
         // Adding data into table
-        table = adding_row(table, &*usn,&*location, &*server)
+        adding_row(& mut table, &*usn,&*location, &*server)
     }
     table.printstd();
 
