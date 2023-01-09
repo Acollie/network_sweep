@@ -5,29 +5,25 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use tokio::task;
 
 use std::{
     error::Error,
     io,
-    time::{Duration, Instant},
+    time::{Duration},
 };
 
 use tui::{
     backend::TermionBackend,
-    layout::{Constraint, Corner, Direction, Layout},
+    layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
-    text::{Span, Spans},
-    widgets::{Block, Borders, List, ListItem, ListState},
+    widgets::{Block, Borders},
     Frame, Terminal,
 };
 use tui::backend::Backend;
-use tui::layout::Alignment;
-use tui::widgets::{Cell, Row, Table, TableState, Wrap};
+use tui::widgets::{Cell, Row, Table, TableState};
 use futures::prelude::*;
-use ssdp_client::URN;
 use ssdp_client::SearchTarget;
-use reqwest;
+
 
 struct App {
     state: TableState,
@@ -78,17 +74,17 @@ impl App {
 
 async fn scan_network() -> Vec<Vec<String>> {
     let search_target = SearchTarget::RootDevice;
-    println!("Loading...");
     let mut responses = ssdp_client::search(&search_target, Duration::from_secs(3), 5).await.unwrap();
     let mut devices:Vec<Vec<String>>= Vec::new();
     while let Some(response) = responses.next().await {
         let response = response.unwrap();
         let server:String = response.server().to_owned();
         let location:String = response.location().to_owned();
-
-        let mut row: Vec<String> = vec![
+        let usn:String = response.usn().to_owned().to_string();
+        let row: Vec<String> = vec![
             server,
-            location
+            location,
+            usn
 
         ];
         devices.push( row);
@@ -156,7 +152,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
 
     let selected_style = Style::default().add_modifier(Modifier::REVERSED);
     let normal_style = Style::default();
-    let header_cells = ["Server", "Location"]
+    let header_cells = ["Server", "Location","USN"]
         .iter()
         .map(|h| Cell::from(*h).style(Style::default().fg(Color::Red)));
     let header = Row::new(header_cells)
